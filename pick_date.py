@@ -1,30 +1,13 @@
-from selenium import webdriver
+"""
+Function
+"""
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
-driver = webdriver.Chrome()
-driver.get('http://yourwebsite.com/datepicker')
 
-# Open the date picker
-date_picker = driver.find_element(By.ID, 'datePickerId')
-date_picker.click()
-
-# Navigate to the desired month and year
-while True:
-    month_year = driver.find_element(By.CLASS_NAME, 'monthYearSelector').text
-    if month_year == 'September 2024':
-        break
-    next_button = driver.find_element(By.CLASS_NAME, 'nextButton')
-    next_button.click()
-
-# Select the day
-day = driver.find_element(By.XPATH, "//td[text()='2']")
-day.click()
-
-def find_date(date_string, day):
+def find_date(date_string, day, driver):
     """
     Finds a date in the date picker and selects it
+    date format: 'September 2024'
     """
     # Open the date picker
     date_picker = driver.find_element(By.XPATH, "//input[@id='fromDate']")
@@ -32,9 +15,9 @@ def find_date(date_string, day):
 
     # Navigate to the desired month and year
     while True:
-        month_year = driver.find_element(By.CLASS_NAME, 'monthYearSelector').text
+        month_year = driver.find_element(By.XPATH, '//th[@class="datepicker-switch"]').text
         if month_year == date_string:
+            driver.find_element(By.XPATH, f'//td[text()="{day}" and @class="day"]').click()
             break
-        next_button = driver.find_element(By.CLASS_NAME, 'next')
-
-
+        prev_button = driver.find_element(By.XPATH, '//th[@class="prev"]')
+        prev_button.click()
