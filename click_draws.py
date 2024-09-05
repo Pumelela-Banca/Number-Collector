@@ -2,6 +2,7 @@
 Clicks on draws urls
 """
 
+
 class ManageDrawsNavigation:
     """
     Navigates the draws urls
@@ -22,7 +23,6 @@ class ManageDrawsNavigation:
             self.item += 1
             draw.click()
             if len(draws) != 50 and self.item == len(draws):
-                # save the last date to json file
                 return
             if self.item == 10:
                 self.click_next_page()
@@ -35,7 +35,7 @@ class ManageDrawsNavigation:
                 attributes = self.get_attributes_daily()
             # Save the attributes to the database
             # to do
-        self.click_draws()
+        self.click_draws(draw_type=draw_type)
 
     def amount_of_available_draws(self):
         """

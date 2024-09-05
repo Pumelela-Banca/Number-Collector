@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from pick_date import find_date
 from pick_today_date import pick_today_date
 from click_draws import ManageDrawsNavigation
+from find_last_date import save_last_date, find_last_date
 
 
 # Set up Firefox options
@@ -27,6 +28,9 @@ draws_urls = ["https://www.nationallottery.co.za/lotto-history",
               "https://www.nationallottery.co.za/daily-lotto-history",
               "https://www.nationallottery.co.za/daily-lotto-history"]
 
+# See if the database exists  last date is in last_draw_dates.json
+
+
 
 # Open a webpage
 for url in draws_urls:
@@ -35,38 +39,43 @@ for url in draws_urls:
     
     # Select the start draw date
     if url == "https://www.nationallottery.co.za/lotto-history":
-        find_date("March 2000", 1, driver)
+        date_last = find_last_date("LottoP1")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "LottoP1"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/powerball-history":
-        find_date("October 2009", 1, driver)
+        date_last = find_last_date("Powerball")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "Powerball"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/powerball-plus-history":
-        find_date("November 2015", 1, driver)
+        date_last =  find_last_date("PowerballP1")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "PowerballP1"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/daily-lotto-history":
-        find_date("March 2019", 1, driver)
+        date_last = find_last_date("DailyLotto")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "DailyLotto"
         name = "Daily"
     elif url == "https://www.nationallottery.co.za/lotto-plus-1-history":
-        find_date("November 2003", 1, driver)
+        date_last = find_last_date("LottoP2")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "LottoP2"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/lotto-plus-2-history":
-        find_date("August 2017", 1, driver)
+        date_last = find_last_date("LottoP3")
+        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
         db_name = "LottoP3"
         name = "Lotto"
 
     pick_today_date(driver) # Pick todays date on the second calender
     driver.find_element_by_xpath('//div[@class="btnBox" and text() ="Search"]').click()
-    ManageDrawsNavigation(driver).click_draws(name)
+
+    get_numbers_from_web = ManageDrawsNavigation(driver)
+    get_numbers_from_web.click_draws(name)
+    save_last_date(name, get_numbers_from_web.last_date)
       
-
-
-
-# Print the title of the page
 
 # Close the browser
 driver.quit()

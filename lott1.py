@@ -1,42 +1,14 @@
-"""
-Main entry point to number collector scripts
-"""
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from datetime import datetime
 
-# Set up Firefox options
-options = Options()
-options.add_argument("-headless")
+# Original date string
+date_str = "2024-09-04"
 
-# Initialize the WebDriver
-driver = webdriver.Firefox(options=options)
+# Convert string to datetime object
+date_obj = datetime.strptime(date_str, "%Y-%m-%d")
 
-draws_urls = ["https://www.nationallottery.co.za/lotto-history",
-              "https://www.nationallottery.co.za/powerball-history",
-              "https://www.nationallottery.co.za/powerball-plus-history",
-              "https://www.nationallottery.co.za/daily-lotto-history",
-              "https://www.nationallottery.co.za/lotto-plus-1-history",
-              "https://www.nationallottery.co.za/lotto-plus-2-history",
-              "https://www.nationallottery.co.za/daily-lotto-history",
-              "https://www.nationallottery.co.za/daily-lotto-history"]
+# Convert datetime object to desired string format
+formatted_date = date_obj.strftime("%Y-%B-%d")
 
-
-# Open a webpage
-for url in draws_urls:
-    driver.get(url)
-    # Print the title of the page
-    print(driver.title)
-
-
-# Print the title of the page
-
-# Close the browser
-driver.quit()
-
-
-
-
-
-# div winners //div[@id="div3Winner"] amount
-# number of winners //div[@id="div5"]
-# get numbers //li[@id='ball23']//div[@class='shape']/span  .text
+print(formatted_date)  # Output: 2024-September-04
+print(type(formatted_date))  # Output: <class 'str'>
+print(formatted_date.split('-'))  # Output: ['2024', 'September', '04']
