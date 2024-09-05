@@ -1,11 +1,8 @@
 """
 Main entry point to number collector scripts
 """
-from datetime import datetime
-import sqlite3
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.by import By
 from pick_date import find_date
 from pick_today_date import pick_today_date
 from click_draws import ManageDrawsNavigation
@@ -40,32 +37,32 @@ for url in draws_urls:
     # Select the start draw date
     if url == "https://www.nationallottery.co.za/lotto-history":
         date_last = find_last_date("LottoP1")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "LottoP1"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/powerball-history":
         date_last = find_last_date("Powerball")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "Powerball"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/powerball-plus-history":
         date_last =  find_last_date("PowerballP1")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "PowerballP1"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/daily-lotto-history":
         date_last = find_last_date("DailyLotto")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "DailyLotto"
         name = "Daily"
     elif url == "https://www.nationallottery.co.za/lotto-plus-1-history":
         date_last = find_last_date("LottoP2")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "LottoP2"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/lotto-plus-2-history":
         date_last = find_last_date("LottoP3")
-        find_date(f"{date_last.year} {date_last.month}", int(date_last.day), driver)
+        find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "LottoP3"
         name = "Lotto"
 
