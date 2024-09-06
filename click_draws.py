@@ -1,13 +1,17 @@
 """
 Clicks on draws urls
 """
+from datetime import datetime
+import sqlite3
 
 
 class ManageDrawsNavigation:
     """
     Navigates the draws urls
     """
-    def __init__(self, driver):
+    def __init__(self, driver, db):
+        self.conn = db
+        self.curs = self.conn.cursor() 
         self.driver = driver
         self.item = 0
         self.last_date = None
@@ -91,7 +95,7 @@ class ManageDrawsNavigation:
         for prise in range(1, 9):
             prises.append(self.convert_prize(self.driver.find_element_by_xpath(
                 f'//div[@id="div{prise}Winner"]').text))
-        return draw_date, numbers, winners, prises
+        return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
 
 
     def get_attributes_powerball(self):
@@ -123,9 +127,8 @@ class ManageDrawsNavigation:
         for prise in range(1, 10):
             prises.append(self.convert_prize(self.driver.find_element_by_xpath(
                 f'//div[@id="div{prise}Winner"]').text))
-        return draw_date, numbers, winners, prises
+        return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
         
-
     def get_attributes_daily(self):
         """
         Get the attributes of the draw
@@ -153,7 +156,7 @@ class ManageDrawsNavigation:
         for prise in range(1, 5):
             prises.append(self.convert_prize(self.driver.find_element_by_xpath(
                 f'//div[@id="div{prise}Winner"]').text))
-        return draw_date, numbers, winners, prises
+        return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
 
     def convert_prize(self, prize):
         """

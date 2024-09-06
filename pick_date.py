@@ -11,11 +11,16 @@ def find_date(date_string, day, driver):
     date format: 'September 2024'
     """
     # Open the date picker
+    """
+    date_obj.strftime("%B")
+    """
     date_picker = driver.find_element(By.XPATH, "//input[@id='fromDate']")
     date_picker.click()
-    date_obj = datetime.strptime(date_string.replace(" ", "-") + f"-{day}", "%Y-%B-%d")
+    new_date_string = date_string.split(" ")
+    date_obj = datetime(int(new_date_string[0]), int(new_date_string[1]), day=day)
     new_date = date_obj + timedelta(days=1)
-    date_string = f"{new_date.month} {new_date.year}"
+    date_string = f"{new_date.strftime('%B')} {new_date.year}"
+    print(date_string)
     day = int(new_date.day)
 
     # Navigate to the desired month and year
