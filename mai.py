@@ -69,7 +69,7 @@ for url in draws_urls:
     pick_today_date(driver) # Pick todays date on the second calender
     driver.find_element_by_xpath('//div[@class="btnBox" and text() ="Search"]').click()
 
-    get_numbers_from_web = ManageDrawsNavigation(driver,db=db)
+    get_numbers_from_web = ManageDrawsNavigation(driver,db=db, db_name=db_name)
     get_numbers_from_web.click_draws(name)
     save_last_date(name, get_numbers_from_web.last_date)
       

@@ -9,7 +9,7 @@ class ManageDrawsNavigation:
     """
     Navigates the draws urls
     """
-    def __init__(self, driver, db):
+    def __init__(self, driver, db, db_name):
         self.conn = db
         self.curs = self.conn.cursor() 
         self.driver = driver
