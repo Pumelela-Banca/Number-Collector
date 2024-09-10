@@ -13,4 +13,4 @@ def pick_today_date(driver):
     date_picker.click()
 
     # Click on todays date
-    driver.find_element(By.XPATH, '//td[text()="today day"]').click()
+    driver.find_element(By.XPATH, '//td[@class="today day"]').click()

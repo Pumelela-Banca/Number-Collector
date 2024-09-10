@@ -4,6 +4,7 @@ Main entry point to number collector scripts
 import sqlite3
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.by import By
 from pick_date import find_date
 from pick_today_date import pick_today_date
 from click_draws import ManageDrawsNavigation
@@ -12,7 +13,7 @@ from find_last_date import save_last_date, find_last_date
 
 # Set up Firefox options
 options = Options()
-#options.add_argument("-headless")
+options.add_argument("-headless")
 
 # Initialize the WebDriver
 driver = webdriver.Firefox(options=options)
@@ -38,37 +39,38 @@ for url in draws_urls:
     if url == "https://www.nationallottery.co.za/lotto-history":
         date_last = find_last_date("LottoP1")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "LottoP1"
+        db_name = "lotto_api_lottop1"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/powerball-history":
+        raise Exception("Powerball has not been implemented yet")
         date_last = find_last_date("Powerball")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "Powerball"
+        db_name = "lotto_api_powerball"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/powerball-plus-history":
         date_last =  find_last_date("PowerballP1")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "PowerballP1"
+        db_name = "lotto_api_powerballp1"
         name = "Powerball"
     elif url == "https://www.nationallottery.co.za/daily-lotto-history":
         date_last = find_last_date("DailyLotto")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "DailyLotto"
+        db_name = "lotto_api_daily"
         name = "Daily"
     elif url == "https://www.nationallottery.co.za/lotto-plus-1-history":
         date_last = find_last_date("LottoP2")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "LottoP2"
+        db_name = "lotto_api_lottop2"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/lotto-plus-2-history":
         date_last = find_last_date("LottoP3")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
-        db_name = "LottoP3"
+        db_name = "lotto_api_lottop3"
         name = "Lotto"
-
+    driver.implicitly_wait(3)
     pick_today_date(driver) # Pick todays date on the second calender
-    driver.find_element_by_xpath('//div[@class="btnBox" and text() ="Search"]').click()
-
+    driver.find_element(By.XPATH, '//div[@class="btnBox" and text() ="Search"]').click()
+    
     get_numbers_from_web = ManageDrawsNavigation(driver,db=db, db_name=db_name)
     get_numbers_from_web.click_draws(name)
     save_last_date(name, get_numbers_from_web.last_date)
