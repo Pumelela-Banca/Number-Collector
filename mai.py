@@ -42,7 +42,6 @@ for url in draws_urls:
         db_name = "lotto_api_lottop1"
         name = "Lotto"
     elif url == "https://www.nationallottery.co.za/powerball-history":
-        raise Exception("Powerball has not been implemented yet")
         date_last = find_last_date("Powerball")
         find_date(f"{date_last.year} {date_last.month}", date_last.day, driver)
         db_name = "lotto_api_powerball"

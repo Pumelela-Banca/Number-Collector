@@ -1,10 +1,12 @@
 """
 Clicks on draws urls
 """
+from time import sleep
 from datetime import datetime
 import sqlite3
 from db import insert_into_tables
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class ManageDrawsNavigation:
@@ -27,9 +29,10 @@ class ManageDrawsNavigation:
         draws = self.driver.find_elements(By.XPATH,
                                          '//div[@class="dataVal dataVal1"]//a[@class="blueLink ank"]')
         self.item = 0
-        for draw in draws:
+        position = 0
+        while True:
             self.item += 1
-            draw.click()
+            draws[position].click()
             
             if draw_type == "Lotto":
                 attributes = self.get_attributes_lotto()
@@ -38,12 +41,24 @@ class ManageDrawsNavigation:
             else:
                 attributes = self.get_attributes_daily()
             insert_into_tables(self.db_name, cursor=self.curs, attributes=attributes)
-            if self.item % 10 == 0:
-                self.click_next_page()
             if len(draws) != 50 and self.item == len(draws):
                 return
-        self.driver.implicitly_wait(3)
-        self.click_draws(draw_type=draw_type)
+            
+            if position == 49:
+                element = self.driver.find_element(By.XPATH, '//li[@id="next"]')
+                if "disabled" in element.get_attribute("class"):
+                    return
+                self.click_next_page()
+                sleep(2)
+                draws = self.driver.find_elements(By.XPATH,
+                                         '//div[@class="dataVal dataVal1"]//a[@class="blueLink ank"]')
+                position = 0
+                self.item = 0
+                continue
+            if self.item % 10 == 0:
+                print("apge", self.item)
+                self.click_next_page()
+            position += 1
 
     def amount_of_available_draws(self):
         """
@@ -67,7 +82,12 @@ class ManageDrawsNavigation:
         """
         Clicks back to  list of draws
         """
-        self.driver.find_element(By.XPATH,
+        try:
+            self.driver.find_element(By.XPATH,
+                                 '//span[@id="back"]').click()
+        except ElementClickInterceptedException:
+            sleep(5)
+            self.driver.find_element(By.XPATH,
                                  '//span[@id="back"]').click()
         
     def get_attributes_lotto(self):
