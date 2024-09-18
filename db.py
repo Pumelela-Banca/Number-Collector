@@ -36,6 +36,6 @@ def insert_into_tables(table_name, cursor, attributes):
                             draw_date,
                             number_1, number_2, number_3, number_4, number_5,
                             div_winners_1, div_winners_2, div_winners_3, div_winners_4, div_prise_1, div_prise_2,
-                            div_prise_3, div_prise_4) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            div_prise_3, div_prise_4) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
                     ''', data )
     cursor.connection.commit()

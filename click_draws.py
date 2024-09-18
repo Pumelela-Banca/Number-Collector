@@ -32,7 +32,11 @@ class ManageDrawsNavigation:
         position = 0
         while True:
             self.item += 1
+            if self.item >= len(draws):
+                return
             draws[position].click()
+            if len(draws) != 50 and self.item == len(draws):
+                return
             
             if draw_type == "Lotto":
                 attributes = self.get_attributes_lotto()
@@ -41,8 +45,7 @@ class ManageDrawsNavigation:
             else:
                 attributes = self.get_attributes_daily()
             insert_into_tables(self.db_name, cursor=self.curs, attributes=attributes)
-            if len(draws) != 50 and self.item == len(draws):
-                return
+            
             
             if position == 49:
                 element = self.driver.find_element(By.XPATH, '//li[@id="next"]')
@@ -56,7 +59,6 @@ class ManageDrawsNavigation:
                 self.item = 0
                 continue
             if self.item % 10 == 0:
-                print("apge", self.item)
                 self.click_next_page()
             position += 1
 
@@ -122,9 +124,8 @@ class ManageDrawsNavigation:
         for prise in range(1, 9):
             prises.append(self.convert_prize(self.driver.find_element(By.XPATH, 
                                                                       f'//div[@id="div{prise}Winner"]').text))
-        self.driver.find_element(By.XPATH, '//span[@id="back"]').click()
+        self.click_previous_page()
         return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
-
 
     def get_attributes_powerball(self):
         """
@@ -132,17 +133,19 @@ class ManageDrawsNavigation:
         """
         # Get the draw date
         draw_date = self.driver.find_element(By.XPATH, 
-                                             '//span[@id="drawDate1"]').text
+                                             '//span[@id="drawDate"]').text
         if not self.last_date:
             self.last_date = draw_date
 
         # Get the numbers
         numbers = []
         for number in range(1, 6):
-            numbers.append(int(self.driver.find_element(By.XPATH, 
-                                                        f'//li[@id="ball{number}"]//div//span').text))
-        numbers.append(int(self.driver.find_element(By.XPATH, 
-                                                    '//li[@id="bonusball1"]//div//span').text))
+            num = self.driver.find_element(By.XPATH, 
+                                                    f'//li[@id="ball{number}"]//div//span').text
+            numbers.append(int(num) if num[0] != "0" else int(num[1]))
+        num = self.driver.find_element(By.XPATH, 
+                                                '//li[@id="bonusball1"]//div//span').text
+        numbers.append(int(num) if num[0] != "0" else int(num[1]))
 
         # Get the winners
         winners = []
@@ -155,7 +158,7 @@ class ManageDrawsNavigation:
         for prise in range(1, 10):
             prises.append(self.convert_prize(self.driver.find_element(By.XPATH, 
                                                                       f'//div[@id="div{prise}Winner"]').text))
-        self.driver.find_element(By.XPATH, '//span[@id="back"]').click()
+        self.click_previous_page()
         return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
         
     def get_attributes_daily(self):
@@ -164,15 +167,16 @@ class ManageDrawsNavigation:
         """
         # Get the draw date
         draw_date = self.driver.find_element(By.XPATH, 
-                                             '//span[@id="drawDate1"]').text
+                                             '//span[@id="drawDateLotto"]').text
         if not self.last_date:
             self.last_date = draw_date
 
         # Get the numbers
         numbers = []
         for number in range(1, 6):
-            numbers.append(int(self.driver.find_element(By.XPATH, 
-                                                        f'//li[@id="ball{number}"]//div//span').text))
+            num = self.driver.find_element(By.XPATH, 
+                                                    f'//li[@id="ball{number}"]//div//span').text
+            numbers.append(int(num) if num[0] != "0" else int(num[1]))
 
         # Get the winners
         winners = []
@@ -185,7 +189,7 @@ class ManageDrawsNavigation:
         for prise in range(1, 5):
             prises.append(self.convert_prize(self.driver.find_element(By.XPATH, 
                                                                       f'//div[@id="div{prise}Winner"]').text))
-        self.driver.find_element(By.XPATH, '//span[@id="back"]').click()
+        self.click_previous_page()
         return datetime.strptime(draw_date, "%Y-%m-%d"), numbers, winners, prises
 
     def convert_prize(self, prize):

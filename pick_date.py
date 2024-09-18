@@ -1,6 +1,7 @@
 """
 Module that selects dates and sorts the month
 """
+import time
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 
@@ -14,6 +15,7 @@ def find_date(date_string, day, driver):
     """
     date_obj.strftime("%B")
     """
+    time.sleep(2)
     date_picker = driver.find_element(By.XPATH, "//input[@id='fromDate']")
     date_picker.click()
     new_date_string = date_string.split(" ")
@@ -21,7 +23,7 @@ def find_date(date_string, day, driver):
     new_date = date_obj + timedelta(days=1)
     date_string = f"{new_date.strftime('%B')} {new_date.year}"
     print(date_string)
-    day = int(new_date.day)
+    day = new_date.day
 
     # Navigate to the desired month and year
     while True:

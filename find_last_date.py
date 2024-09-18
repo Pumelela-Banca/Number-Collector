@@ -25,4 +25,14 @@ def find_last_date(draw_type):
     """
     with open('last_draw_dates.json', 'r') as file:
         data = json.load(file)
+        
         return datetime.strptime(data[draw_type], '%Y-%m-%d')
+
+
+if __name__ == "__main__":
+    print(find_last_date("LottoP1"))
+    print(find_last_date("Powerball"))
+    print(find_last_date("PowerballP1"))
+    print(find_last_date("DailyLotto"))
+    print(find_last_date("LottoP2"))
+    print(find_last_date("LottoP3"))
